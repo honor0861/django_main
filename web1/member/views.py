@@ -31,13 +31,20 @@ def login(request):
     if request.method == 'GET':
         return render(request, 'member/login.html')
     elif request.method == 'POST':
-        idnum = request.POST['id']
-        passw = request.POST['pw']
-        ar2 = [idnum, passw] # 리스트로 만듦
-        print(ar2)
-        # DB에 추가함
-        # 크롬에서 127.0.0.1:8000/member/index
-        return redirect('/member/index')
+        ar = [request.POST['id'], request.POST['pw']] # 리스트로 만듦
+        sql = """
+            SELECT ID, NAME FROM MEMBER
+            WHERE ID=%s AND PW=%s
+            """
+        cursor.execute(sql, ar)
+        data=cursor.fetchone() # 한 줄 가져오기
+        print(type(data))
+        print(data) # ('a','b')
+        if data:
+            request.session['userid'] = data[0]
+            request.session['username'] = data[1]
+            return redirect('/member/index')
+        return redirect('/member/login')
 
 @csrf_exempt # post로 값을 전달받는 곳은 필수로 해야함
 def join(request):
