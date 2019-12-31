@@ -1,5 +1,4 @@
 # member/urls.py : 하위 url에 속함, 사전에 파일 생성해야 함 
-
 from django.urls import path
 from . import views # 현재 패키지에서 views 모듈을 가져옴
 
@@ -16,4 +15,3 @@ urlpatterns = [
     path('list', views.list, name="list"),
     path('join1', views.join1, name="join1")  # ur1 만들기용 >> join1
     ] 
-

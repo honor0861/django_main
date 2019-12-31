@@ -39,7 +39,6 @@ def login(request):
         # 크롬에서 127.0.0.1:8000/member/index
         return redirect('/member/index')
 
-
 @csrf_exempt # post로 값을 전달받는 곳은 필수
 def join(request):
     if request.method == 'GET':
@@ -62,3 +61,4 @@ def join(request):
 
         # 크롬에서 127.0.0.1:8000/member/index
         return redirect('/member/index')
+        
