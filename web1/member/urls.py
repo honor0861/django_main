@@ -15,4 +15,3 @@ urlpatterns = [
     path('list', views.list, name="list"),
     path('join1', views.join1, name="join1")  # ur1 만들기용 -> join1
     ]
-
