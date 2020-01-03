@@ -6,15 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel = "stylesheet" href = "/static/css/bootstrap.css"/>
+    <!-- link는 head와 /head 사이에 사용해야 함 : 외부에 있는 문서를 연결-->
+    <!-- 스타일 시트로서 이 문서를 불러오겠다는 의미-->
 </head>
 <body>
     <div class="container">
-        <div style="margin-top:5px; margin-bottom: 5px;">
-            <h3>글내용</h3>
+        <div style="margin-top:5px; margin-bottom:5px;">
+            <h3>글 내용</h3>
         </div>
         <table class ="table">
             <tr>
-                <th class="bg-warning">글번호</th>
+                <th class="bg-warning">글 번호</th>
                 <td>{{one.0}}</td>
             </tr>
             <tr>
@@ -39,7 +41,7 @@
                 <td>{{one.3}}</td>
             </tr>
             <tr>
-                <th class="bg-light">조회수</th>
+                <th class="bg-light">조회 수</th>
                 <td>{{one.4}}</td>
             </tr>
             <tr>
@@ -59,6 +61,7 @@
         {% else %}
         <a href="#" class="btn btn-success disabled">다음글</a>
         {% endif %}
+        
         <a href="/board/edit?no={{one.0}}" class = "btn btn-success">글수정</a>
         <a href="/board/delete?no={{one.0}}" class = "btn btn-success">글삭제</a>
     </div>

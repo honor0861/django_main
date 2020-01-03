@@ -26,8 +26,7 @@ def dataframe(request):
 @csrf_exempt
 def edit(request):
     if request.method == 'GET':
-        no = request.GET.get("no",0)
-
+        no = request.GET.get("no", 0)
         sql = """
             SELECT NO, TITLE, CONTENT
             FROM BOARD_TABLE1
@@ -36,25 +35,21 @@ def edit(request):
         cursor.execute(sql, [no])
         data = cursor.fetchone()
         return render(request, 'board/edit.html', {"one":data})
-    
     elif request.method == 'POST':
         no = request.POST['no']
         ti = request.POST['title']
         co = request.POST['content']
-
         arr = [ti,co,no]
         sql = """
-            UPDATE BOARD_TABLE1 SET TITLE = %s
-            CONTENT=%s WHERE NO= %s
+            UPDATE BOARD_TABLE1 SET TITLE=%s, CONTENT=%s WHERE NO = %s
         """
-
         cursor.execute(sql, arr)
         return redirect("/board/content?no="+ no)
+
 @csrf_exempt
 def delete(request):
     if request.method == 'GET':
         no = request.GET.get("no",0)
-
         sql = """
             DELETE FROM BOARD_TABLE1
             WHERE NO=%s
@@ -71,10 +66,8 @@ def content(request):
         # # If와 Else의 개념 : ? 기준으로 no= 가 있는지 없는지 여부 확인
         # if no=34라는 값이 들어가게 되면 no에다가 34를 대입, no에 값이 없을 경우 no에다가 0를 대입
         # request.GET['no']
-
         if no == 0 :
             return redirect("/board/list") # <a href와 같음>
-
         if request.session['hit']==1:
             sql = """
                 UPDATE BOARD_TABLE1 SET HIT = HIT+1 
@@ -119,7 +112,6 @@ def content(request):
             img = data[6].read() # 바이트 배열을 img에 넣음
             img64 = b64encode(img).decode("utf-8")
         else : # 없는 경우
-            print(os.path.join(BASE_DIR))
             file = open('./static/img/default.jpg','rb')
             img = file.read()
             img64 = b64encode(img).decode("utf-8")
@@ -140,7 +132,7 @@ def list(request):
         """
         cursor.execute(sql)
         data = cursor.fetchall() # 한 번에 모든 Row를 읽기 위해서 사용
-        # print( type(data) )    # list
+        # print(type(data))      # list
         # print(data)            # [ ( ), ( ) ]
         return render(request, 'board/list.html',{"abc":data}) # "abc"는 KEY
     
@@ -153,8 +145,7 @@ def write(request):
         tmp = None        
         if 'img' in request.FILES:
             img = request.FILES['img'] # name값 img
-            tmp = img.read() # 이미지를 byte[]로 변경
-            
+            tmp = img.read() # 이미지를 byte[]로 변경  
         arr = [
             request.POST['title'],
             request.POST['content'],
@@ -171,5 +162,4 @@ def write(request):
             cursor.execute(sql, arr)
         except Exception as e:
             print(e)
-
         return redirect("/board/list") # a href와 같음
