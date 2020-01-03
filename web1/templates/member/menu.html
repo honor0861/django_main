@@ -1,0 +1,17 @@
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h5 class="my-0 mr-md-auto font-weight-normal">G-Market</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
+        <!-- a태그는 하이퍼링크, 하이퍼링크 겸 주소를 href에 기술하면 됨-->
+        <!-- a태그 사이에 있는 로그인이라는 글자를 누르면 href에 기술된 주소로 넘어감-->
+        {% if not request.session.userid %}
+            <a class="p-2 text-dark" href="/member/login">로그인</a>
+            <a class="p-2 text-dark" href="/member/join">회원가입</a>
+            <a class="btn btn-outline-primary" href="#">Sign out</a>
+        {% else %}
+            <a class="p-2 text-dark" href="/member/edit">회원정보수정</a>
+            <a class="p-2 text-dark" href="/member/delete">회원탈퇴</a>
+            <a class="p-2 text-dark" href="/member/logout">로그아웃</a>
+        {% endif %}
+    </nav>
+    <a class="btn btn-outline-primary" href="/member/join">sign up</a>
+</div>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>edit</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+    <!-- <head>와 </head> 사이에 넣음, 여러 <link> 태그 삽입 가능 -->
+    <!-- href : 연결할 곳의 주소, rel : 스타일 시트로 연결 할 때 --> 
+</head>
+<body>
+    <form action="/member/edit" method="post">
+    <!-- "/member/edit" : edit의 post를 실행 -->
+    아이디 <input type = "text" value="{{one.0}}" name = "id" readonly />
+    이름 : <input type = "text" value="{{one.2}}" name = "name" />
+    나이 : <input type = "text" value="{{one.3}}" name = "age" />
+    <input type = "submit" value = "정보수정" />
+    </form>
+</body>
+</html>

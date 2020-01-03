@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>게시판 목록</title>
+    <link rel = "stylesheet" href = "/static/css/bootstrap.css"/>
+</head>
+
+<body>
+    <div class ="container">
+        <h3>게시판 목록</h3>
+        <a href = "/board/write" class = "btn btn-primary">글쓰기</a>
+
+        <div class = "form-inline row justify-content-end"
+            style="margin-top:5px; margin-bottom: 5px;">
+            <select class="form-control">
+                <option>제목</option>
+                <option>내용</option>
+                <option>작성자</option>
+            </select>&nbsp;
+            <input type = "text"
+                class="form-control"
+                placeholder="검색어" />&nbsp;
+            <input type = "submit"
+                class="btn btn-success"
+                value="검색" />
+        </div>
+        
+        <table class = "table">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>날짜</th>
+            <tr>
+            <!-- abc로 보냈으니까 abc 고정-->
+            {% for one in abc %}
+            <tr>
+                <td>{{one.0}}</td>
+                <td><a href="/board/content?no={{one.0}}">{{one.1}}</a></td>
+                <td>{{one.2}}</td>
+                <td>{{one.3}}</td>
+                <td>{{one.4}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
