@@ -21,6 +21,11 @@ def delete(request):
     if request.method == 'GET':
         no = request.GET.get("no",0)
 
+        sql = """
+            DELETE FROM BOARD_TABLE1
+            WHERE NO=%s
+        """
+
 @csrf_exempt
 def content(request):
     if request.method =='GET':
