@@ -12,7 +12,8 @@
     <form action="/board/edit" method="post">
     <div class="container">
         <h3>게시판 글수정</h3>
-        <div class="form-inline" style="margin-bottom: 5px;">
+        <input type = "hidden" name ="no" value="{{one.0}}"/>
+        <div class="form-inline"  style="margin-bottom: 5px;">
             <label>글제목</label>
             <input type="text" style="width:400px" 
                 value="{{one.1}}"

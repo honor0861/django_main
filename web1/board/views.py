@@ -24,8 +24,20 @@ def edit(request):
         cursor.execute(sql, [no])
         data = cursor.fetchone()
         return render(request, 'board/edit.html', {"one":data})
+    
+    elif request.method == 'POST':
+        no = request.POST['no']
+        ti = request.POST['title']
+        co = request.POST['content']
 
-        
+        arr = [ti,co,no]
+        sql = """
+            UPDATE BOARD_TABLE1 SET TITLE = %s
+            CONTENT=%s WHERE NO= %s
+        """
+
+        cursor.execute(sql, arr)
+        return redirect("/board/content?no="+ no)
 @csrf_exempt
 def delete(request):
     if request.method == 'GET':
