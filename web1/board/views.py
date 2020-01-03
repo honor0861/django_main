@@ -12,6 +12,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # 디렉�
 cursor = connection.cursor() # sql문 수행을 하기 위한 cursor 객체
 
 @csrf_exempt
+def edit(request):
+    if request.method == 'GET':
+        pass
+
+@csrf_exempt
+def delete(request):
+    if request.method == 'GET':
+        no = request.GET.get("no",0)
+
+@csrf_exempt
 def content(request):
     if request.method =='GET':
         no = request.GET.get('no',0)
