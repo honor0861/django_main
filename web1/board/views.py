@@ -14,8 +14,18 @@ cursor = connection.cursor() # sql문 수행을 하기 위한 cursor 객체
 @csrf_exempt
 def edit(request):
     if request.method == 'GET':
-        pass
+        no = request.GET.get("no",0)
 
+        sql = """
+            SELECT NO, TITLE, CONTENT
+            FROM BOARD_TABLE1
+            WHERE NO=%s
+        """
+        cursor.execute(sql, [no])
+        data = cursor.fetchone()
+        return render(request, 'board/edit.html', {"one":data})
+
+        
 @csrf_exempt
 def delete(request):
     if request.method == 'GET':
@@ -25,6 +35,8 @@ def delete(request):
             DELETE FROM BOARD_TABLE1
             WHERE NO=%s
         """
+        cursor.execute(sql, [no])
+        return redirect("/board/list")
 
 @csrf_exempt
 def content(request):
