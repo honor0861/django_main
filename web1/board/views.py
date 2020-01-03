@@ -4,12 +4,24 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from base64 import b64encode # byte배열을 base64(이미지를 출력해줄 수 있는 포맷)로 변경함
+import pandas as pd
 
 # setting.py
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # 디렉토리 이름 추출
 
 cursor = connection.cursor() # sql문 수행을 하기 위한 cursor 객체
+
+def dataframe(request):
+    if request.method == 'GET':
+        df = pd.read_sql(
+            """
+            SELECT NO, WRITER, HIT, REGDATE
+            FROM BOARD_TABLE1
+            """, con=connection)
+        print(df)
+        print(df['NO'])
+        return render(request, 'board/dataframe.html',{"df":df.to_html(classes="table")})
 
 @csrf_exempt
 def edit(request):
