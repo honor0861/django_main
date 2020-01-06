@@ -17,20 +17,26 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # 디렉�
 @csrf_exempt
 def t2_update_all(request):
     if request.method == 'GET':
-        n = request.session['no'] # 8, 5, 3
-        print(n)
+        n = request.session['no']                  # 'no'라는 세션 변수 이름에 'no'의 값을 추가함 ex) 8, 5, 3
         # SELECT * FROM BOARD_TABLE2 WHERE NO=8 or NO=5 or NO=3
         # SELECT * FROM BOARD_TABLE2 WHERE NO IN (8,5,3)
-        rows = Table2.objects.filter(no__in=n)
+        rows = Table2.objects.filter(no__in=n)     # 조건에 맞는 여러 행을 출력
         return render(request, 'board/t2_update_all.html',{"list":rows})
     elif request.method == 'POST':  # 체크박스 클릭하고 나서 수정을 누르면 POST를 먼저 실행- > GET으로 -> POST 실행
-        menu = request.POST['menu']
-        print(menu)
+        # print(request.POST)
+        # => <QueryDict: {'csrfmiddlewaretoken': ['AokosOP4DCBMxMSxA9flmRektNeXuDYRbDmfozIec0xjGF4OA7LvPRFnrySXGWjs']
+        # , 'menu': ['1'], 'chk[]': ['37', '19', '8']}>
+        menu = request.POST['menu'] 
+        # request.POST : 키로 전송된 자료에 접근할 수 있도록 해주는 사전, 선택된 설문의 ID를 문자열로 반환합니다.
+        # print(menu)                 # 1이 출력
         if menu == '1':
-            no=request.POST.getlist("chk[]")
-            request.session['no'] = no
-            print(no)
-            return redirect("/board/t2_update_all")
+            # print(request.POST.getlist)
+            # <bound method MultiValueDict.getlist of <QueryDict: {'csrfmiddlewaretoken': ['opmPmU4j4tljhTy02x0t5WElIFDPsFYtZEoGiFXtDRhQqMKh2vwDyW5oGqhPEYj4']
+            # , 'menu': ['1'], 'chk[]': ['37', '19', '8']}>>
+            no=request.POST.getlist("chk[]") # 리스트 출력
+            # print(no)                 ['37', '19', '8'] 출력
+            request.session['no'] = no              # 'no'라는 세션 변수 이름에 'no'의 값을 추가함
+            return redirect("/board/t2_update_all") # URL로 이동
         elif menu == '2':
             no=request.POST.getlist("no[]")
             name=request.POST.getlist("name[]")
@@ -45,7 +51,7 @@ def t2_update_all(request):
                 obj.eng = eng[i]
                 obj.math = math[i]
                 objs.append(obj)
-            Table2.objects.bulk_update(objs, ["name","kor","eng","math"])
+            Table2.objects.bulk_update(objs, ["name","kor","eng","math"]) # 한 번에 접근하여 저장 가능
             return redirect("/board/t2_list")
 
 def t2_insert_all(request):
@@ -63,7 +69,6 @@ def t2_insert_all(request):
         """
 
         objs = []
-
         for i in range(0, len(na),1):
             obj = Table2()
             obj.name = na[i]
@@ -100,10 +105,8 @@ def t2_update(request):
 def t2_delete(request):
     if request.method == 'GET':
         n = request.GET.get("no",0)
-
         # SELECT * FROM BOARD_TABLE2 WHERE NO = %s
         row = Table2.objects.get(no=n)
-
         # DELETE FROM BOARD_TABLE2 WHERE NO=%s
         row.delete() # 삭제
 
