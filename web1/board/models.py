@@ -11,3 +11,12 @@ class Table1(models.Model):
     img     = models.BinaryField(null=True)           # 바이너리 필드
     regdate = models.DateTimeField(auto_now_add=True) # 날짜와 시간을 갖는 필드, 자동 생성
     
+class Table2(models.Model):
+    objects = models.Manager() # vs code 오류 제거용
+
+    no      = models.AutoField(primary_key=True)      # 자동 입력, 기본키
+    name    = models.CharField(max_length=30)         # 문자타입, 최대 30글자
+    kor     = models.IntegerField()                   # 32비트 정수형 필드
+    eng     = models.IntegerField()                   # 32비트 정수형 필드
+    math    = models.IntegerField()                   # 32비트 정수형 필드
+    regdate = models.DateTimeField(auto_now_add=True) # 날짜와 시간을 갖는 필드, 자동 생성
