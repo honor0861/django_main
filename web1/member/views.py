@@ -35,7 +35,7 @@ def exam_select(request):
     # SELECT SUM(kor) AS kor, SUM(eng) AS eng, SUM(math) AS math FROM MEMBER_TABLE2 GROUP BY CLASSROOM
     list = Table2.objects.values('classroom').annotate(kor=Sum('kor'),eng=Sum('eng'),math=Sum('math'))   
     
-    return render(request, 'member/exam_select.html',{"list":list}) 
+    return render(request, 'member/exam_select.html',{"list":list}) \
 
 @csrf_exempt
 def exam_list(request):
