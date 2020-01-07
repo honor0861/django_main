@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>자료 입력</title>
+</head>
+<body>
+    <h3>멤버 추가</h3>
+    <hr />
+    <form action = "/member/exam_insert" method="post">
+        {% csrf_token %}
+        <table>
+            {% for i in cnt %}
+            <tr>
+                <td><input type="text" name="name"></td>
+                <td><input type="text" name="kor"></td>
+                <td><input type="text" name="eng"></td>
+                <td><input type="text" name="math"></td>
+                <td><input type="text" name="classroom"></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="추가">
+        <a href="/member/exam_list">목록</a>
+    </form>
+</body>
+</html>

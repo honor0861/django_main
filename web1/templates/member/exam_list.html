@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action ="/member/exam_insert" method ="post"></form>
+    {% csrf_token %}
+        <table border="1">
+        {% for one in list %}
+        <tr>
+            <td>{{one.name}}</td>
+            <td>{{one.kor}}</td>
+            <td>{{one.eng}}</td>
+            <td>{{one.math}}</td>
+            <td>{{one.regdate}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/member/exam_insert">추가</a>
+    </form>
+</body>
+</html>
