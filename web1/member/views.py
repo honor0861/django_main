@@ -16,23 +16,26 @@ from .models import Table2 # 실습과제
 from django.db.models import Sum, Max, Min, Count
 
 def exam_select(request):
-    no = request.GET.get('no',0)
-    # SELECT SUM(math) FROM MEMBER_TABLE2 WHERE CLASS_ROOM = 101
+    sum = Table2.objects.raw("SELECT  1 as no, SUM(math) smath FROM MEMBER_TABLE2")
+    print(type(sum))
+    print(sum.columns)
+    print(sum[0].smath)
+    
+    # SELECT SUM(math) FROM MEMBER_TABLE2 WHERE CLASS_ROOM=101
     list = Table2.objects.aggregate(Sum('math'))
 
     # SELECT NO, NAME FROM MEMBER_TABLE2
     list = Table2.objects.all().values('no','name')
 
-    # SELECT * FROM MEMBER_TABLE2 BY name ASC
+    # SELECT * FROM MEMBER_TABLE2 ORDER BY name ASC
     list = Table2.objects.all().order_by('name')
-    # list = Table2.objects.raw("SELECT * FROM MEMBER_TABLE2 ORDER BY name ASC")
-    
-    # 반별 국어, 영어, 수학 합계
-    # SELECT SUM(kor) , SUM(eng), SUM(math)
-    # FROM MEMBER_TABLE2 GROUP BY CLASSROOM
+    #list = Table2.objects.raw("SELECT * FROM MEMBER_TABLE2 ORDER BY name ASC")
 
-    list = Table2.objects.values('classroom').annotate(kor=Sum('kor'),eng=Sum('eng'),math=Sum('math'))
-    return render(request, 'member/exam_select.html',{"list":list})
+    # 반별 국어, 영어, 수학 합계
+    # SELECT SUM(kor) AS kor, SUM(eng) AS eng, SUM(math) AS math FROM MEMBER_TABLE2 GROUP BY CLASSROOM
+    list = Table2.objects.values('classroom').annotate(kor=Sum('kor'),eng=Sum('eng'),math=Sum('math'))   
+    
+    return render(request, 'member/exam_select.html',{"list":list}) 
 
 @csrf_exempt
 def exam_list(request):
