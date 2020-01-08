@@ -8,6 +8,7 @@ import pandas as pd
 cursor = connection.cursor() # sql문 수행을 하기 위한 cursor 객체
 
 ##########################################################################################
+from .models import Table1 
 from .models import Table2   # models.py 파일의 Table2 클래스
 
 # setting.py
@@ -245,18 +246,45 @@ def content(request):
 
 @csrf_exempt
 def list(request):
-    if request.method =='GET':
-        request.session['hit'] = 1 # 세션에 hit=1
+    if request.method=='GET':
+        request.session['hit'] = 1                          # 세션에 hit=1
+        txt = request.GET.get("txt","")
+        page = int(request.GET.get("page",1))
+        arr = ['%'+txt+'%', page*10-10+1, page*10]
+        print(arr)
         sql = """
-            SELECT NO, TITLE, CONTENT, WRITER, HIT, TO_CHAR(REGDATE, 'YYYY-MM-DD HH:MI:SS')
-            FROM BOARD_TABLE1
-            ORDER BY NO DESC
+            SELECT * FROM(
+                SELECT
+                    NO, TITLE, CONTENT,
+                    ROW_NUMBER() OVER (ORDER BY NO DESC) ROWN
+                FROM
+                    BOARD_TABLE1
+                WHERE TITLE LIKE %s
+            )    
+            WHERE ROWN BETWEEN %s AND %s
+            """
+        cursor.execute(sql, arr)
+        data = cursor.fetchall()                             # 한 번에 모든 Row를 읽기 위해서 사용
+        # print(type(data))                                  # list
+        # print(data)                                        # [ ( ), ( ) ]
+        
         """
-        cursor.execute(sql)
-        data = cursor.fetchall() # 한 번에 모든 Row를 읽기 위해서 사용
-        # print(type(data))      # list
-        # print(data)            # [ ( ), ( ) ]
-        return render(request, 'board/list.html',{"abc":data}) # "abc"는 KEY
+        # 1번 방법
+        cnt = Table1.objects.all().count()
+        tot = (cnt-1)//10+1
+        """
+
+        # 2번 방법
+        arr1 = ['%'+txt+'%']
+        sql = """
+            SELECT COUNT (*) FROM BOARD_TABLE1
+            WHERE TITLE LIKE %s
+            """
+        cursor.execute(sql,arr1)
+        cnt = cursor.fetchone()[0]
+        tot = (cnt-1)//10+1
+
+        return render(request, 'board/list.html',{"abc":data,"pages":range(1,(tot+1),1)}) # "abc"는 KEY
     
 
 @csrf_exempt
@@ -285,3 +313,5 @@ def write(request):
         except Exception as e:
             print(e)
         return redirect("/board/list") # a href와 같음
+
+        

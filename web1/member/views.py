@@ -13,9 +13,45 @@ from django.contrib.auth import logout as logout1
 from django.contrib.auth import authenticate as auth1
 
 from .models import Table2 # 실습과제
-from django.db.models import Sum, Max, Min, Count
+from django.db.models import Sum, Max, Min, Count, Avg
+
+def js_chart(request):
+    str =[100, 200,300,400 , 500, 600]
+    return render(request, 'member/js_chart.html')
+
+def js_index(request):
+    return render(request, 'member/js_index.html')
 
 def exam_select(request):
+    txt = request.GET.get("txt","")
+    page = int(request.GET.get("page",1)) # 페이지가 안 들어오면 1페이지가 표시되도록 함
+    
+    if txt == "": # 검색어가 없는 경우 전체 출력
+        # page nummber 1 => 0, 10
+        # page nummber 2 => 11, 20
+        # page nummber 3 => 21, 30
+        
+        # SELECT * FROM MEMBER_TABLE2
+        list = Table2.objects.all()[(page*10)-10:page*10]
+
+        # SELECT COUNT(*) FROM MEMBER_TABLE2
+        cnt  = Table2.objects.all().count()
+        tot = (cnt-1)//10 + 1
+        # 10 => 1
+        # 13 => 2
+        # 20 => 2
+        # 31 => 4
+    else:
+        # SELECT * FROM MT2 WHERE name LIKE '%가%'
+        list = Table2.objects.filter(name__contains=txt)[page*10-10:page*10]
+
+        # SELECT COUNT(*) FROM MT2 WHERE name LIKE '%가%'
+        cnt = Table2.objects.filter(name__contains=txt).count()
+        tot = (cnt-1)//10 +1
+
+    return render(request, 'member/exam_select.html',{"list":list, "pages":range(1,tot+1,1)})
+
+    """
     sum = Table2.objects.raw("SELECT  1 as no, SUM(math) smath FROM MEMBER_TABLE2")
     print(type(sum))
     print(sum.columns)
@@ -35,8 +71,9 @@ def exam_select(request):
     # SELECT SUM(kor) AS kor, SUM(eng) AS eng, SUM(math) AS math FROM MEMBER_TABLE2 GROUP BY CLASSROOM
     list = Table2.objects.values('classroom').annotate(kor=Sum('kor'),eng=Sum('eng'),math=Sum('math'))   
     
-    return render(request, 'member/exam_select.html',{"list":list}) \
-
+    return render(request, 'member/exam_select.html',{"list":list}) 
+    """
+    
 @csrf_exempt
 def exam_list(request):
     if request.method == 'GET':
