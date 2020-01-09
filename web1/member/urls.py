@@ -13,7 +13,7 @@ urlpatterns = [
     path('join', views.join, name="join"),
     path('login', views.login, name="login"),
     path('logout',views.logout, name="logout"),
-    path('list', views.list, name="list"),
+    path('list1', views.list1, name="list1"),
     path('edit', views.edit, name="edit"),
     path('delete', views.delete, name="delete"),
     path('join1', views.join1, name="join1"),  # ur1 만들기용 -> join1
@@ -32,5 +32,9 @@ urlpatterns = [
     path('exam_select',views.exam_select, name="exam_select"),
 
     path('js_index', views.js_index, name="js_index"),
-    path('js_chart', views.js_chart, name="js_chart")
+    path('js_chart', views.js_chart, name="js_chart"),
+    
+    path('dataframe', views.dataframe, name="dataframe"),
+    path('graph', views.graph, name="graph"),
+    path('graph2', views.graph2, name="graph2")
     ]

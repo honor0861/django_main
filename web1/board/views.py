@@ -52,6 +52,8 @@ def t2_update_all(request):
                 obj.eng = eng[i]
                 obj.math = math[i]
                 objs.append(obj)
+
+            #일괄 추가
             Table2.objects.bulk_update(objs, ["name","kor","eng","math"]) # 한 번에 접근하여 저장 가능
             return redirect("/board/t2_list")
 

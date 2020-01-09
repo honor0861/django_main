@@ -15,8 +15,101 @@ from django.contrib.auth import authenticate as auth1
 from .models import Table2 # 실습과제
 from django.db.models import Sum, Max, Min, Count, Avg
 
+import pandas as pd                                  # conda install pandas
+
+import matplotlib.pyplot as plt                      
+import io                                            # byte로 변환
+import base64                                        # byte를 base64로 변경
+from matplotlib import font_manager, rc              # 한글 폰트 적용
+
+def graph2(request):
+    sum_graph = Table2.objects.order_by('classroom').values("classroom").annotate(kor_sum=Sum('kor'), eng_sum=Sum('eng'), math_num= Sum('math'))
+    print(sum_graph)
+
+    df2 = pd.DataFrame(sum_graph)
+    df2 = df2[df2['classroom'].isin(['4','5','6'])]
+    print(df2)
+    df2 = df2.set_index("classroom")
+    df2.plot(kind="bar")
+
+    # plt.show()                                    # 표시
+    plt.draw()                                       # 안 보이게 그림 캡쳐
+    img = io.BytesIO()                               # img에 byte배열로 보관
+    plt.savefig(img, format = "png")                 # png파일 포맷으로 저장
+    img_url2 = base64.b64encode(img.getvalue()).decode()
+
+    plt.close()                                      # 그래프 종료
+    return render(request, 'member/graph2.html',{"graph2":'data:;base64,{}'.format(img_url2)})
+
+def graph(request):
+    # SELECT SUM("kor") FROM MEMBER_TABLE2
+    sum_kor = Table2.objects.aggregate(Sum("kor"))
+    print(sum_kor) # kor__sum
+
+    # SELECT SUM("kor") AS sum1 FROM MEMBER_TABLE2
+    sum_kor = Table2.objects.aggregate(sum1=Sum("kor"))
+    print(sum_kor) # sum1
+
+    # SELECT SUM("kor") FROM MEMBER_TABLE2 WHERE CLASSROOM = 4
+    sum_kor = Table2.objects.filter(classroom = '4').aggregate(sum1=Sum("kor"))
+    print(sum_kor)
+
+    # SELECT SUM("kor") FROM MEMBER_TABLE2 WHERE KOR > 10
+    # > gt, >= gte, < lt, <= lte
+    sum_kor = Table2.objects.filter(kor__gt=10).aggregate(sum1=Sum("kor"))
+    print(sum_kor)
+
+    # 반별 합계 : SELECT SUM("kor") sum1, SUM("eng") sum2, SUM("math") sum3 FROM MEMBER_TABLE2 GROUP BY CLASSROOM
+    sum_kor = Table2.objects.order_by('classroom').values("classroom").annotate(sum1=Sum("kor"), sum2=Sum("eng"), sum3=Sum("math"))
+    print(sum_kor)
+    # print(sum.query)
+    
+    df = pd.DataFrame(sum_kor)
+    print(df)
+    df = df.set_index("classroom")
+    print(df)
+    df.plot(kind="bar")
+
+    print("-"*30, end="\n")
+    
+    # 폰트 읽기
+    font_name = font_manager \
+        .FontProperties(fname="c:/Windows/Fonts/malgun.ttf") \
+        .get_name()
+
+    # 폰트 적용    
+    rc('font', family=font_name) 
+
+    # plt.show()                                     # 표시
+    plt.draw()                                       # 안 보이게 그림 캡쳐
+    img = io.BytesIO()                               # img에 byte배열로 보관
+    plt.savefig(img, format = "png")                 # png파일 포맷으로 저장
+    img_url = base64.b64encode(img.getvalue()).decode()
+
+    plt.close()                                      # 그래프 종료
+    return render(request, 'member/graph.html',{"graph1":'data:;base64,{}'.format(img_url)})
+    # <img src="{{graph1}}" /> <= graph.html에서
+
+def dataframe(request) :
+    # SELECT * FROM MEMBER_TABLE2
+    # rows = Table2.objects.all()
+
+    # 1. QuerySet -> list로 변경
+    # SELECT NO,NAME,KOR FROM MEMBER_TABLE2
+    rows = list(Table2.objects.all().values("no","name","kor","classroom"))[0:10]
+    print(rows)
+
+    # 2. list -> dataframe으로 변경
+    df = pd.DataFrame(rows)
+    print(df)
+
+    # 3. dataframe -> list
+    rows1 = df.values.tolist()
+
+    return render(request, 'member/dataframe.html', {"df_table": df.to_html(), "list":rows})
+
 def js_chart(request):
-    str =[100, 200,300,400 , 500, 600]
+    str =[100, 200, 300, 400 , 500, 600]
     return render(request, 'member/js_chart.html')
 
 def js_index(request):
@@ -220,16 +313,17 @@ def join1(request):
     if request.method == 'GET':
         return render(request, 'member/join1.html')
 
-def list(request):
+def list1(request):
     sql = "SELECT * FROM MEMBER ORDER BY ID ASC"  # ID 기준으로 오름차순
     cursor.execute(sql)                           # SQL문 실행
     data = cursor.fetchall()       # 일치하는 행의 리스트 결과값을 가져옴
     print(type(data)) # list
     print(data)                    # [ (1,2,3,4,5), ( ), ( )]
-    #list.html을 표시하기 이전에 list 변수에 data 값을, title 변수에 "회원목록" 문자를
-    return render(request, 'member/list.html', {"list":data, "title":"회원목록"})
+    #list1.html을 표시하기 이전에 list 변수에 data 값을, title 변수에 "회원목록" 문자를
+    return render(request, 'member/list1.html', {"list1":data, "title":"회원목록"})
 
 def index(request):
+    print("AA")
     # return HttpResponse("index n page <hr />")
     return render(request, 'member/index.html')
 
